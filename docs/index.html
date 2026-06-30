@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Native Research Lab</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --primary: #2563eb;
+      --dark: #111827;
+      --green-bg: #dcfce7;
+      --green-text: #166534;
+      --yellow-bg: #fef9c3;
+      --yellow-text: #854d0e;
+      --blue-bg: #dbeafe;
+      --blue-text: #1d4ed8;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 28px 22px;
+      background: var(--dark);
+      color: white;
+    }
+
+    .brand {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+
+    .brand-sub {
+      color: #9ca3af;
+      font-size: 13px;
+      margin-bottom: 28px;
+    }
+
+    nav a {
+      display: block;
+      color: #d1d5db;
+      text-decoration: none;
+      padding: 11px 12px;
+      border-radius: 10px;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      background: #1f2937;
+      color: white;
+    }
+
+    main {
+      padding: 36px;
+      max-width: 1180px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #111827, #1f2937);
+      color: white;
+      border-radius: 26px;
+      padding: 34px;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: 36px;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      margin: 0;
+      color: #d1d5db;
+      font-size: 16px;
+      max-width: 860px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    section {
+      margin-top: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 22px;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .value {
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .done { background: var(--green-bg); color: var(--green-text); }
+    .progressing { background: var(--yellow-bg); color: var(--yellow-text); }
+    .planned { background: var(--blue-bg); color: var(--blue-text); }
+
+    .progress {
+      height: 10px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .bar {
+      height: 100%;
+      background: var(--primary);
+      width: 35%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: white;
+    }
+
+    th, td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      background: #f9fafb;
+      font-weight: 800;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .decision {
+      border-left: 4px solid var(--primary);
+      padding-left: 16px;
+      margin-top: 14px;
+    }
+
+    .quote {
+      background: #f9fafb;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      color: #374151;
+    }
+
+    .footer {
+      margin-top: 36px;
+      padding: 20px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 920px) {
+      .layout { grid-template-columns: 1fr; }
+      aside { position: static; height: auto; }
+      main { padding: 20px; }
+      .cols-4, .cols-3, .cols-2 { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside>
+      <div class="brand">AI Native<br />Research Lab</div>
+      <div class="brand-sub">AX기획팀 AI Native 전환 연구실</div>
+      <nav>
+        <a href="#current">현재 상태</a>
+        <a href="#principles">운영 원칙</a>
+        <a href="#roadmap">로드맵</a>
+        <a href="#decisions">의사결정</a>
+        <a href="#work">업무영역 분석</a>
+        <a href="#participation">참여 방법</a>
+      </nav>
+    </aside>
+
+    <main>
+      <div class="hero">
+        <h1>AI Native Enterprise Framework 연구실</h1>
+        <p>
+          이 공간은 AX기획팀의 기획 업무를 AI Native 방식으로 전환하기 위한 공유 연구실입니다.
+          완성된 정답을 제시하는 곳이 아니라, 팀원들과 함께 작은 의사결정을 쌓아가며 더 나은 업무 방식을 만들어가는 공간입니다.
+        </p>
+      </div>
+
+      <section id="current">
+        <div class="grid cols-4">
+          <div class="card">
+            <div class="label">현재 연구 주제</div>
+            <div class="value">AX기획팀 AI Native 전환</div>
+          </div>
+          <div class="card">
+            <div class="label">현재 단계</div>
+            <div class="value">팀 공유 준비</div>
+          </div>
+          <div class="card">
+            <div class="label">현재 버전</div>
+            <div class="value">v0.1</div>
+          </div>
+          <div class="card">
+            <div class="label">진행 방식</div>
+            <div class="value">작은 의사결정 축적</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:16px;">
+          <h2>현재 연구 위치</h2>
+          <p>
+            우리는 현재 큰 프레임워크를 먼저 만들기보다, AX기획팀의 실제 업무를 기준으로
+            업무영역별 AI 도입 방식과 사용 방식을 하나씩 분석하고 있습니다.
+          </p>
+          <div class="progress"><div class="bar"></div></div>
+          <div class="muted" style="margin-top:8px;">초기 공유 및 팀 의견 수렴 단계</div>
+        </div>
+      </section>
+
+      <section id="principles">
+        <div class="card">
+          <h2>운영 원칙</h2>
+          <div class="grid cols-2">
+            <div>
+              <h3>1. 한글 중심</h3>
+              <p class="muted">한글로 표현 가능한 내용은 한글을 기본으로 작성합니다.</p>
+            </div>
+            <div>
+              <h3>2. 작은 결정부터</h3>
+              <p class="muted">큰 프레임워크를 먼저 만들지 않고, 작은 의사결정을 하나씩 쌓습니다.</p>
+            </div>
+            <div>
+              <h3>3. 팀 의견 반영</h3>
+              <p class="muted">개인 의견뿐 아니라 팀원의 의견을 함께 반영합니다.</p>
+            </div>
+            <div>
+              <h3>4. 기술 독립성</h3>
+              <p class="muted">특정 AI 모델, 도구, 벤더에 종속되지 않는 구조를 지향합니다.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="roadmap">
+        <div class="card">
+          <h2>로드맵</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>단계</th>
+                <th>이름</th>
+                <th>상태</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Research Board MVP</td>
+                <td><span class="badge done">완료</span></td>
+                <td>Google Spreadsheet + Apps Script 기반 운영 보드 구현</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>팀 공유 연구실</td>
+                <td><span class="badge progressing">진행중</span></td>
+                <td>GitHub Pages 기반 웹 연구실 구성 및 팀 공유</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>업무영역별 분석</td>
+                <td><span class="badge planned">예정</span></td>
+                <td>기획 업무영역별 AI 도입 방식 분석</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>평가 전략</td>
+                <td><span class="badge planned">예정</span></td>
+                <td>AI Native 전환 효과를 평가하는 기준 정의</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="decisions">
+        <div class="card">
+          <h2>최근 의사결정</h2>
+          <div class="decision">
+            <h3>Research Board를 공식 운영 공간으로 사용한다</h3>
+            <p class="muted">ChatGPT는 연구·분석·설계, Research Board는 팀 공유·의사결정 기록, Google Spreadsheet는 데이터 저장소로 역할을 분리한다.</p>
+          </div>
+          <div class="decision">
+            <h3>문서는 한글을 기본으로 작성한다</h3>
+            <p class="muted">팀원들이 쉽게 이해하고 참여할 수 있도록 한글 중심으로 작성한다.</p>
+          </div>
+          <div class="decision">
+            <h3>작은 의사결정을 하나씩 쌓는다</h3>
+            <p class="muted">큰 프레임워크를 먼저 만들지 않고, 실제 논의와 결정이 축적되면서 프레임워크가 만들어지도록 한다.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="work">
+        <div class="card">
+          <h2>업무영역별 AI Native 분석 방향</h2>
+          <p>
+            앞으로 각 업무영역을 아래 항목으로 분석합니다. 이 표는 확정된 답이 아니라 팀 의견을 수렴하기 위한 초안입니다.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>업무영역</th>
+                <th>필요한 지침</th>
+                <th>필요한 하네스</th>
+                <th>필요한 AI 역할</th>
+                <th>평가 기준</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>요구사항 분석</td>
+                <td>요구사항 분석 지침</td>
+                <td>요구사항 분석 하네스</td>
+                <td>누락사항 탐지, 유사 사례 검색, 초안 작성</td>
+                <td>누락률, 재작업률, 분석 시간</td>
+              </tr>
+              <tr>
+                <td>화면 설계</td>
+                <td>화면 설계 지침</td>
+                <td>화면 설계 하네스</td>
+                <td>화면 구조 제안, 정책 반영 확인, 검토 지원</td>
+                <td>수정 횟수, 정책 누락률, 설계 품질</td>
+              </tr>
+              <tr>
+                <td>QA</td>
+                <td>테스트 작성 지침</td>
+                <td>QA 하네스</td>
+                <td>테스트케이스 생성, 예외 조건 탐지</td>
+                <td>결함 발견률, 테스트 커버리지</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="participation">
+        <div class="card">
+          <h2>팀원 참여 방법</h2>
+          <div class="grid cols-3">
+            <div class="quote">
+              <h3>1. 현재 상태 확인</h3>
+              <p class="muted">먼저 이 페이지에서 현재 연구 주제와 최근 의사결정을 확인합니다.</p>
+            </div>
+            <div class="quote">
+              <h3>2. 의견 작성</h3>
+              <p class="muted">Research Board의 Opinion 영역에 업무 경험, 반론, 보완 의견을 남깁니다.</p>
+            </div>
+            <div class="quote">
+              <h3>3. 의사결정 반영</h3>
+              <p class="muted">합의된 내용은 Decision으로 기록하고, 이후 Framework로 정리합니다.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">
+        AI Native Research Lab · AX기획팀 AI Native 전환 연구 · v0.1
+      </div>
+    </main>
+  </div>
+</body>
+</html>
