@@ -3,439 +3,62 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Native Research Lab</title>
+  <title>AI Native Lab</title>
+  <script src="./config.js"></script>
   <style>
-    :root {
-      --bg: #f6f7fb;
-      --card: #ffffff;
-      --text: #111827;
-      --muted: #6b7280;
-      --line: #e5e7eb;
-      --primary: #2563eb;
-      --dark: #111827;
-      --green-bg: #dcfce7;
-      --green-text: #166534;
-      --yellow-bg: #fef9c3;
-      --yellow-text: #854d0e;
-      --blue-bg: #dbeafe;
-      --blue-text: #1d4ed8;
-      --radius: 18px;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.65;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      min-height: 100vh;
-    }
-
-    aside {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      padding: 28px 22px;
-      background: var(--dark);
-      color: white;
-    }
-
-    .brand {
-      font-size: 24px;
-      font-weight: 800;
-      line-height: 1.25;
-      margin-bottom: 10px;
-    }
-
-    .brand-sub {
-      color: #9ca3af;
-      font-size: 13px;
-      margin-bottom: 28px;
-    }
-
-    nav a {
-      display: block;
-      color: #d1d5db;
-      text-decoration: none;
-      padding: 11px 12px;
-      border-radius: 10px;
-      margin-bottom: 5px;
-      font-size: 14px;
-    }
-
-    nav a:hover {
-      background: #1f2937;
-      color: white;
-    }
-
-    main {
-      padding: 36px;
-      max-width: 1180px;
-    }
-
-    .hero {
-      background: linear-gradient(135deg, #111827, #1f2937);
-      color: white;
-      border-radius: 26px;
-      padding: 34px;
-      margin-bottom: 24px;
-    }
-
-    .hero h1 {
-      margin: 0 0 12px;
-      font-size: 36px;
-      line-height: 1.2;
-    }
-
-    .hero p {
-      margin: 0;
-      color: #d1d5db;
-      font-size: 16px;
-      max-width: 860px;
-    }
-
-    .grid {
-      display: grid;
-      gap: 16px;
-    }
-
-    .cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-
-    section {
-      margin-top: 24px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 22px;
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
-    }
-
-    h2 {
-      margin: 0 0 14px;
-      font-size: 22px;
-    }
-
-    h3 {
-      margin: 0 0 8px;
-      font-size: 17px;
-    }
-
-    .label {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 6px;
-    }
-
-    .value {
-      font-size: 22px;
-      font-weight: 800;
-    }
-
-    .muted {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 5px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .done { background: var(--green-bg); color: var(--green-text); }
-    .progressing { background: var(--yellow-bg); color: var(--yellow-text); }
-    .planned { background: var(--blue-bg); color: var(--blue-text); }
-
-    .progress {
-      height: 10px;
-      background: #e5e7eb;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
-
-    .bar {
-      height: 100%;
-      background: var(--primary);
-      width: 35%;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      overflow: hidden;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: white;
-    }
-
-    th, td {
-      padding: 13px 14px;
-      border-bottom: 1px solid var(--line);
-      text-align: left;
-      vertical-align: top;
-      font-size: 14px;
-    }
-
-    th {
-      background: #f9fafb;
-      font-weight: 800;
-    }
-
-    tr:last-child td {
-      border-bottom: 0;
-    }
-
-    .decision {
-      border-left: 4px solid var(--primary);
-      padding-left: 16px;
-      margin-top: 14px;
-    }
-
-    .quote {
-      background: #f9fafb;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 16px;
-      color: #374151;
-    }
-
-    .footer {
-      margin-top: 36px;
-      padding: 20px 0;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    @media (max-width: 920px) {
-      .layout { grid-template-columns: 1fr; }
-      aside { position: static; height: auto; }
-      main { padding: 20px; }
-      .cols-4, .cols-3, .cols-2 { grid-template-columns: 1fr; }
-      .hero h1 { font-size: 28px; }
-    }
+    :root{--bg:#f6f7fb;--panel:#fff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--dark:#111827;--primary:#2563eb;--green:#16a34a;--yellow:#ca8a04;--radius:18px;}
+    *{box-sizing:border-box}body{margin:0;font-family:Arial,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text)}
+    .layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}.side{background:var(--dark);color:#fff;padding:26px 18px;position:sticky;top:0;height:100vh}.brand{font-size:22px;font-weight:900;line-height:1.25}.brand small{display:block;margin-top:8px;color:#9ca3af;font-size:13px;font-weight:400}.nav{margin-top:28px;display:grid;gap:6px}.nav button{border:0;background:transparent;color:#d1d5db;text-align:left;padding:12px 13px;border-radius:12px;cursor:pointer;font-size:14px}.nav button.active,.nav button:hover{background:#1f2937;color:#fff}.main{padding:30px;max-width:1280px}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:22px}.kicker{color:var(--primary);font-weight:800;font-size:13px;margin-bottom:6px}h1{margin:0;font-size:32px;letter-spacing:-.5px}h2{margin:0 0 14px;font-size:20px}.sub{color:var(--muted);font-size:14px;margin-top:8px;line-height:1.6}.section{display:none}.section.active{display:block}.grid{display:grid;gap:16px}.cols4{grid-template-columns:repeat(4,minmax(0,1fr))}.cols2{grid-template-columns:repeat(2,minmax(0,1fr))}.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:0 10px 24px rgba(15,23,42,.04)}.metric .label{color:var(--muted);font-size:13px;margin-bottom:8px}.metric .value{font-size:24px;font-weight:900;word-break:break-word}.btn{border:0;background:var(--primary);color:#fff;padding:11px 15px;border-radius:12px;font-weight:800;cursor:pointer}.btn.gray{background:#374151}.btn:disabled{opacity:.55;cursor:not-allowed}.progress{height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden}.bar{height:100%;background:var(--primary);width:0}.badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:800;background:#eef2ff;color:#3730a3}.badge.Done,.badge.Accepted{background:#dcfce7;color:#166534}.badge.Open,.badge.Draft{background:#dbeafe;color:#1d4ed8}.badge.Review,.badge.InProgress{background:#fef9c3;color:#854d0e}.list-item{border-bottom:1px solid var(--line);padding:12px 0}.list-item:last-child{border-bottom:0}.list-title{font-weight:900}.form{display:grid;gap:12px}.row{display:grid;grid-template-columns:130px 1fr;gap:12px;align-items:center}label{font-weight:800;font-size:13px}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px;font:inherit;background:#fff}textarea{min-height:92px;resize:vertical}table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}th,td{padding:12px;border-bottom:1px solid var(--line);font-size:13px;text-align:left;vertical-align:top}th{background:#f9fafb;font-weight:900;white-space:nowrap}.empty{padding:18px;border:1px dashed var(--line);border-radius:var(--radius);background:#fff;color:var(--muted)}.toast{position:fixed;right:22px;top:22px;background:#111827;color:#fff;padding:13px 16px;border-radius:14px;opacity:0;transform:translateY(-8px);transition:.2s;z-index:99}.toast.show{opacity:1;transform:translateY(0)}
+    @media(max-width:900px){.layout{display:block}.side{position:static;height:auto}.main{padding:20px}.cols4,.cols2{grid-template-columns:1fr}.top{display:block}.row{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
+  <div id="toast" class="toast"></div>
   <div class="layout">
-    <aside>
-      <div class="brand">AI Native<br />Research Lab</div>
-      <div class="brand-sub">AX기획팀 AI Native 전환 연구실</div>
-      <nav>
-        <a href="#current">현재 상태</a>
-        <a href="#principles">운영 원칙</a>
-        <a href="#roadmap">로드맵</a>
-        <a href="#decisions">의사결정</a>
-        <a href="#work">업무영역 분석</a>
-        <a href="#participation">참여 방법</a>
-      </nav>
+    <aside class="side">
+      <div class="brand">AI Native Lab<small>공유용 CRUD v1</small></div>
+      <div class="nav">
+        <button class="active" data-sec="dashboard">대시보드</button>
+        <button data-sec="roadmap">로드맵</button>
+        <button data-sec="decision">의사결정</button>
+        <button data-sec="opinion">의견</button>
+        <button data-sec="framework">프레임워크</button>
+      </div>
     </aside>
-
-    <main>
-      <div class="hero">
-        <h1>AI Native Enterprise Framework 연구실</h1>
-        <p>
-          이 공간은 AX기획팀의 기획 업무를 AI Native 방식으로 전환하기 위한 공유 연구실입니다.
-          완성된 정답을 제시하는 곳이 아니라, 팀원들과 함께 작은 의사결정을 쌓아가며 더 나은 업무 방식을 만들어가는 공간입니다.
-        </p>
+    <main class="main">
+      <div class="top">
+        <div>
+          <div class="kicker">AI Native Enterprise Framework</div>
+          <h1 id="pageTitle">대시보드</h1>
+          <div class="sub" id="subtitle">데이터를 불러오는 중입니다.</div>
+        </div>
+        <button class="btn gray" onclick="loadData()">새로고침</button>
       </div>
-
-      <section id="current">
-        <div class="grid cols-4">
-          <div class="card">
-            <div class="label">현재 연구 주제</div>
-            <div class="value">AX기획팀 AI Native 전환</div>
-          </div>
-          <div class="card">
-            <div class="label">현재 단계</div>
-            <div class="value">팀 공유 준비</div>
-          </div>
-          <div class="card">
-            <div class="label">현재 버전</div>
-            <div class="value">v0.1</div>
-          </div>
-          <div class="card">
-            <div class="label">진행 방식</div>
-            <div class="value">작은 의사결정 축적</div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-top:16px;">
-          <h2>현재 연구 위치</h2>
-          <p>
-            우리는 현재 큰 프레임워크를 먼저 만들기보다, AX기획팀의 실제 업무를 기준으로
-            업무영역별 AI 도입 방식과 사용 방식을 하나씩 분석하고 있습니다.
-          </p>
-          <div class="progress"><div class="bar"></div></div>
-          <div class="muted" style="margin-top:8px;">초기 공유 및 팀 의견 수렴 단계</div>
-        </div>
-      </section>
-
-      <section id="principles">
-        <div class="card">
-          <h2>운영 원칙</h2>
-          <div class="grid cols-2">
-            <div>
-              <h3>1. 한글 중심</h3>
-              <p class="muted">한글로 표현 가능한 내용은 한글을 기본으로 작성합니다.</p>
-            </div>
-            <div>
-              <h3>2. 작은 결정부터</h3>
-              <p class="muted">큰 프레임워크를 먼저 만들지 않고, 작은 의사결정을 하나씩 쌓습니다.</p>
-            </div>
-            <div>
-              <h3>3. 팀 의견 반영</h3>
-              <p class="muted">개인 의견뿐 아니라 팀원의 의견을 함께 반영합니다.</p>
-            </div>
-            <div>
-              <h3>4. 기술 독립성</h3>
-              <p class="muted">특정 AI 모델, 도구, 벤더에 종속되지 않는 구조를 지향합니다.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="roadmap">
-        <div class="card">
-          <h2>로드맵</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>단계</th>
-                <th>이름</th>
-                <th>상태</th>
-                <th>설명</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>Research Board MVP</td>
-                <td><span class="badge done">완료</span></td>
-                <td>Google Spreadsheet + Apps Script 기반 운영 보드 구현</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>팀 공유 연구실</td>
-                <td><span class="badge progressing">진행중</span></td>
-                <td>GitHub Pages 기반 웹 연구실 구성 및 팀 공유</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>업무영역별 분석</td>
-                <td><span class="badge planned">예정</span></td>
-                <td>기획 업무영역별 AI 도입 방식 분석</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>평가 전략</td>
-                <td><span class="badge planned">예정</span></td>
-                <td>AI Native 전환 효과를 평가하는 기준 정의</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section id="decisions">
-        <div class="card">
-          <h2>최근 의사결정</h2>
-          <div class="decision">
-            <h3>Research Board를 공식 운영 공간으로 사용한다</h3>
-            <p class="muted">ChatGPT는 연구·분석·설계, Research Board는 팀 공유·의사결정 기록, Google Spreadsheet는 데이터 저장소로 역할을 분리한다.</p>
-          </div>
-          <div class="decision">
-            <h3>문서는 한글을 기본으로 작성한다</h3>
-            <p class="muted">팀원들이 쉽게 이해하고 참여할 수 있도록 한글 중심으로 작성한다.</p>
-          </div>
-          <div class="decision">
-            <h3>작은 의사결정을 하나씩 쌓는다</h3>
-            <p class="muted">큰 프레임워크를 먼저 만들지 않고, 실제 논의와 결정이 축적되면서 프레임워크가 만들어지도록 한다.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="work">
-        <div class="card">
-          <h2>업무영역별 AI Native 분석 방향</h2>
-          <p>
-            앞으로 각 업무영역을 아래 항목으로 분석합니다. 이 표는 확정된 답이 아니라 팀 의견을 수렴하기 위한 초안입니다.
-          </p>
-          <table>
-            <thead>
-              <tr>
-                <th>업무영역</th>
-                <th>필요한 지침</th>
-                <th>필요한 하네스</th>
-                <th>필요한 AI 역할</th>
-                <th>평가 기준</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>요구사항 분석</td>
-                <td>요구사항 분석 지침</td>
-                <td>요구사항 분석 하네스</td>
-                <td>누락사항 탐지, 유사 사례 검색, 초안 작성</td>
-                <td>누락률, 재작업률, 분석 시간</td>
-              </tr>
-              <tr>
-                <td>화면 설계</td>
-                <td>화면 설계 지침</td>
-                <td>화면 설계 하네스</td>
-                <td>화면 구조 제안, 정책 반영 확인, 검토 지원</td>
-                <td>수정 횟수, 정책 누락률, 설계 품질</td>
-              </tr>
-              <tr>
-                <td>QA</td>
-                <td>테스트 작성 지침</td>
-                <td>QA 하네스</td>
-                <td>테스트케이스 생성, 예외 조건 탐지</td>
-                <td>결함 발견률, 테스트 커버리지</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section id="participation">
-        <div class="card">
-          <h2>팀원 참여 방법</h2>
-          <div class="grid cols-3">
-            <div class="quote">
-              <h3>1. 현재 상태 확인</h3>
-              <p class="muted">먼저 이 페이지에서 현재 연구 주제와 최근 의사결정을 확인합니다.</p>
-            </div>
-            <div class="quote">
-              <h3>2. 의견 작성</h3>
-              <p class="muted">Research Board의 Opinion 영역에 업무 경험, 반론, 보완 의견을 남깁니다.</p>
-            </div>
-            <div class="quote">
-              <h3>3. 의사결정 반영</h3>
-              <p class="muted">합의된 내용은 Decision으로 기록하고, 이후 Framework로 정리합니다.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div class="footer">
-        AI Native Research Lab · AX기획팀 AI Native 전환 연구 · v0.1
-      </div>
+      <section id="dashboard" class="section active"></section>
+      <section id="roadmap" class="section"></section>
+      <section id="decision" class="section"></section>
+      <section id="opinion" class="section"></section>
+      <section id="framework" class="section"></section>
     </main>
   </div>
+<script>
+let DATA={};let IS_SAVING=false;
+document.querySelectorAll('.nav button').forEach(btn=>{btn.onclick=()=>{document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));btn.classList.add('active');document.getElementById(btn.dataset.sec).classList.add('active');document.getElementById('pageTitle').textContent=btn.textContent;};});
+function loadData(){if(!API_URL||API_URL.includes('PASTE_')){showToast('config.js에 API_URL을 입력하세요.');return;}jsonp(API_URL+'?action=getBoardData').then(data=>{DATA=data||{};render();}).catch(err=>showToast('불러오기 오류: '+err.message));}
+function jsonp(url){return new Promise((resolve,reject)=>{const cb='cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);window[cb]=data=>{resolve(data);delete window[cb];script.remove();};const script=document.createElement('script');script.src=url+(url.includes('?')?'&':'?')+'callback='+cb;script.onerror=()=>{delete window[cb];script.remove();reject(new Error('JSONP 요청 실패'));};document.body.appendChild(script);});}
+function render(){const p=DATA.project||{};document.getElementById('subtitle').textContent=`${p['Project Name']||'-'} · ${p['Status']||'-'} · v${p['Version']||'-'} · ${p['Last Updated']||''}`;renderDashboard();renderRoadmap();renderDecision();renderOpinion();renderFramework();}
+function renderDashboard(){const p=DATA.project||{};const roadmap=DATA.roadmap||[];const decisions=DATA.decisions||[];const opinions=DATA.opinions||[];const framework=DATA.framework||[];const progress=num(p['Progress']);const current=roadmap.find(r=>r.Status==='In Progress')||roadmap[0]||{};document.getElementById('dashboard').innerHTML=`<div class="card"><h2>현재 연구 상태</h2><div class="grid cols4">${metric('현재 연구',p['Project Name']||'-')}${metric('현재 단계',current.Phase||p['Current Phase']||'-')}${metric('진행률',progress+'%')}${metric('최근 업데이트',p['Last Updated']||'-')}</div><div style="margin-top:18px"><div class="sub">${esc(current.Description||'')}</div><div class="progress" style="margin-top:10px"><div class="bar" style="width:${num(current.Progress)||progress}%"></div></div></div></div><div class="grid cols4" style="margin-top:16px">${metric('로드맵',roadmap.length)}${metric('의사결정',decisions.length)}${metric('열린 의견',opinions.filter(x=>x.Status==='Open').length)}${metric('프레임워크',framework.length)}</div><div class="grid cols2" style="margin-top:16px"><div class="card"><h2>최근 의사결정</h2>${list(decisions.slice(0,5),'Title','Decision')}</div><div class="card"><h2>최근 의견</h2>${list(opinions.slice(0,5),'Topic','Opinion')}</div></div>`;}
+function renderRoadmap(){document.getElementById('roadmap').innerHTML=`<div class="card"><h2>로드맵 수정</h2><div class="form">${row('No','<input id="rd-no" placeholder="예: 1">')}${row('상태','<select id="rd-status"><option>Draft</option><option>In Progress</option><option>Review</option><option>Done</option></select>')}${row('진행률','<input id="rd-progress" type="number" min="0" max="100">')}${row('담당자',memberSelect('rd-owner'))}${row('메모','<textarea id="rd-note"></textarea>')}<button class="btn" onclick="submitRoadmap(this)">수정</button></div></div><div style="height:16px"></div>${table(DATA.roadmap,['No','Phase','Description','Status','Progress','Owner','Note'])}`;}
+function renderDecision(){document.getElementById('decision').innerHTML=`<div class="card"><h2>의사결정 추가</h2><div class="form">${row('작성자',memberSelect('dec-author'))}${row('제목','<input id="dec-title">')}${row('결정','<textarea id="dec-decision"></textarea>')}${row('이유','<textarea id="dec-reason"></textarea>')}${row('상태','<select id="dec-status"><option>Draft</option><option>Review</option><option>Accepted</option><option>Deprecated</option></select>')}<button class="btn" onclick="submitDecision(this)">저장</button></div></div><div style="height:16px"></div>${table(DATA.decisions,['ID','Date','Author','Title','Decision','Reason','Status'])}`;}
+function renderOpinion(){document.getElementById('opinion').innerHTML=`<div class="card"><h2>의견 추가</h2><div class="form">${row('작성자',memberSelect('op-author'))}${row('주제','<input id="op-topic">')}${row('의견','<textarea id="op-opinion"></textarea>')}${row('상태','<select id="op-status"><option>Open</option><option>Review</option><option>Accepted</option><option>Closed</option></select>')}<button class="btn" onclick="submitOpinion(this)">저장</button></div></div><div style="height:16px"></div>${table(DATA.opinions,['ID','Date','Author','Topic','Opinion','Status'])}`;}
+function renderFramework(){document.getElementById('framework').innerHTML=`<div class="card"><h2>프레임워크 후보 추가</h2><div class="form">${row('분류','<input id="fw-category">')}${row('제목','<input id="fw-title">')}${row('내용','<textarea id="fw-content"></textarea>')}${row('상태','<select id="fw-status"><option>Draft</option><option>Review</option><option>Accepted</option><option>Deprecated</option></select>')}<button class="btn" onclick="submitFramework(this)">저장</button></div></div><div style="height:16px"></div>${table(DATA.framework,['ID','Category','Title','Content','Status','Version'])}`;}
+function submitDecision(btn){post(btn,'decision',{author:val('dec-author'),title:val('dec-title'),decision:val('dec-decision'),reason:val('dec-reason'),status:val('dec-status')});}
+function submitOpinion(btn){post(btn,'opinion',{author:val('op-author'),topic:val('op-topic'),opinion:val('op-opinion'),status:val('op-status')});}
+function submitFramework(btn){post(btn,'framework',{category:val('fw-category'),title:val('fw-title'),content:val('fw-content'),status:val('fw-status')});}
+function submitRoadmap(btn){post(btn,'roadmap',{no:val('rd-no'),status:val('rd-status'),progress:val('rd-progress'),owner:val('rd-owner'),note:val('rd-note')});}
+function post(btn,type,data){if(!lock(btn))return;fetch(API_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({type,data})}).then(()=>{showToast('저장 요청 완료. 잠시 후 새로고침합니다.');setTimeout(()=>{unlock(btn);loadData();},1200);}).catch(err=>{showToast('저장 오류: '+err.message);unlock(btn);});}
+function metric(label,value){return `<div class="card metric"><div class="label">${esc(label)}</div><div class="value">${esc(value)}</div></div>`}function row(label,input){return `<div class="row"><label>${esc(label)}</label>${input}</div>`}function memberSelect(id){return `<select id="${id}">${(DATA.members||['etc']).map(m=>`<option>${esc(m)}</option>`).join('')}</select>`}function list(rows,t,b){if(!rows||!rows.length)return '<div class="empty">등록된 항목이 없습니다.</div>';return rows.map(r=>`<div class="list-item"><div class="list-title">${esc(r[t])}</div><div class="sub">${esc(r[b])}</div></div>`).join('')}function table(rows,headers){if(!rows||!rows.length)return '<div class="empty">등록된 항목이 없습니다.</div>';return `<table><thead><tr>${headers.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${headers.map(h=>cell(h,r[h])).join('')}</tr>`).join('')}</tbody></table>`}function cell(k,v){if(k==='Status')return `<td><span class="badge ${cls(v)}">${esc(v)}</span></td>`;if(k==='Progress'){const n=num(v);return `<td>${n}%<div class="progress"><div class="bar" style="width:${n}%"></div></div></td>`}return `<td>${esc(v)}</td>`}function val(id){const el=document.getElementById(id);return el?el.value:''}function num(v){return parseFloat(String(v||'0').replace('%',''))||0}function esc(v){return String(v||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;')}function cls(v){return String(v||'').replace(/[^a-zA-Z0-9_-]/g,'')}function lock(btn){if(IS_SAVING)return false;IS_SAVING=true;btn.disabled=true;btn.dataset.txt=btn.textContent;btn.textContent='저장중...';return true}function unlock(btn){IS_SAVING=false;if(btn){btn.disabled=false;btn.textContent=btn.dataset.txt||'저장'}}function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+loadData();
+</script>
 </body>
 </html>
