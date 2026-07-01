@@ -1,41 +1,18 @@
 ANP.api = {
-  get baseUrl() {
-    return (window.ANP_CONFIG?.API_URL || '').trim();
-  },
-
-  async request(params = {}) {
-    if (!this.baseUrl || this.baseUrl.includes('PASTE_APPS_SCRIPT')) {
-      throw new Error('API_URL이 설정되지 않았습니다. docs/config.js를 확인하세요.');
-    }
-    const url = new URL(this.baseUrl);
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') url.searchParams.set(key, value);
-    });
-    const res = await fetch(url.toString(), { method: 'GET' });
-    if (!res.ok) throw new Error('데이터를 불러오지 못했습니다.');
-    const json = await res.json();
-    if (json.ok === false) throw new Error(json.message || '요청을 처리하지 못했습니다.');
-    return json;
-  },
-
-  async mutate(action, payload = {}) {
-    if (!this.baseUrl || this.baseUrl.includes('PASTE_APPS_SCRIPT')) {
-      throw new Error('API_URL이 설정되지 않았습니다. docs/config.js를 확인하세요.');
-    }
-    const body = {
-      action,
-      key: ANP.state.session.writeKey,
-      userId: ANP.state.session.userId,
-      payload
-    };
-    const res = await fetch(this.baseUrl, {
+  async request(payload = {}) {
+    const url = window.ANP_CONFIG?.API_URL;
+    if (!url || url.includes('PASTE_YOUR_WEB_APP_URL')) throw new Error('config.js의 API_URL을 설정해주세요.');
+    const isGet = !payload.action || payload.action === 'data';
+    const res = await fetch(url, isGet ? { method: 'GET' } : {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(body)
+      body: JSON.stringify(payload)
     });
-    if (!res.ok) throw new Error('저장 요청을 보내지 못했습니다.');
     const json = await res.json();
-    if (json.ok === false) throw new Error(json.message || '요청을 처리하지 못했습니다.');
+    if (!json.ok) throw new Error(json.message || '요청 처리 중 오류가 발생했습니다.');
     return json;
+  },
+  async mutate(action, data) {
+    return this.request({ action, writeKey: ANP.state.session.writeKey, userId: ANP.state.session.userId, data });
   }
 };
