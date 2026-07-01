@@ -32,15 +32,19 @@ ANP.api = {
   }
 },
   async mutate(action, payload = {}) {
-    const body = {
-      action,
-      key: ANP.state.session.writeKey,
-      userId: ANP.state.session.userId,
-      payload
-    };
-    const res = await fetch(this.endpoint(), { method: 'POST', body: JSON.stringify(body) });
-    const json = await res.json();
-    if (!json.ok) throw new Error(json.message || '저장하지 못했습니다.');
-    return json;
-  }
+  const body = {
+    action,
+    writeKey: ANP.state.session.writeKey,
+    userId: ANP.state.session.userId,
+    data: payload
+  };
+
+  const res = await fetch(this.endpoint(), {
+    method: 'POST',
+    body: JSON.stringify(body)
+  });
+
+  const json = await res.json();
+  if (!json.ok) throw new Error(json.message || '저장하지 못했습니다.');
+  return json;
 };
