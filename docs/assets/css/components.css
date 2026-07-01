@@ -129,3 +129,36 @@
 .list-card > * {
   min-width: 0;
 }
+
+/* RC6: strict cell clamp */
+.cell {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.clamp-1 {
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+}
+
+.clamp-2 {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  white-space: normal !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.45;
+  max-height: 2.9em;
+}
+
+.data-table {
+  table-layout: fixed;
+}
+
+.data-table td {
+  min-width: 0;
+  overflow: hidden;
+}
