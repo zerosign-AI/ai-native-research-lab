@@ -1,18 +1,28 @@
+window.ANP = window.ANP || {};
 ANP.api = {
-  async request(payload = {}) {
-    const url = window.ANP_CONFIG?.API_URL;
-    if (!url || url.includes('PASTE_YOUR_WEB_APP_URL')) throw new Error('config.js의 API_URL을 설정해주세요.');
-    const isGet = !payload.action || payload.action === 'data';
-    const res = await fetch(url, isGet ? { method: 'GET' } : {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
-    });
+  endpoint() {
+    const url = window.ANP_CONFIG?.API_URL || '';
+    if (!url || url.includes('PASTE_YOUR_WEB_APP_URL')) throw new Error('API URL이 설정되지 않았습니다. config.js를 확인하세요.');
+    return url;
+  },
+  async request(params = {}) {
+    const url = new URL(this.endpoint());
+    Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
+    const res = await fetch(url.toString(), { method: 'GET' });
     const json = await res.json();
-    if (!json.ok) throw new Error(json.message || '요청 처리 중 오류가 발생했습니다.');
+    if (!json.ok) throw new Error(json.message || '요청에 실패했습니다.');
     return json;
   },
-  async mutate(action, data) {
-    return this.request({ action, writeKey: ANP.state.session.writeKey, userId: ANP.state.session.userId, data });
+  async mutate(action, payload = {}) {
+    const body = {
+      action,
+      key: ANP.state.session.writeKey,
+      userId: ANP.state.session.userId,
+      payload
+    };
+    const res = await fetch(this.endpoint(), { method: 'POST', body: JSON.stringify(body) });
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.message || '저장하지 못했습니다.');
+    return json;
   }
 };
