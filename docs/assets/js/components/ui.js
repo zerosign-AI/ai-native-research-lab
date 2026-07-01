@@ -107,12 +107,22 @@ ANP.ui = {
     return `<div class="table-wrap"><table class="data-table"><colgroup>${columns.map(c=>`<col style="width:${c.width || 'auto'}">`).join('')}${actions?'<col style="width:132px">':''}</colgroup><thead><tr>${columns.map(c=>`<th>${this.esc(c.label)}</th>`).join('')}${actions?'<th>관리</th>':''}</tr></thead><tbody>${rows.map(row=>`<tr>${columns.map(c=>`<td>${this.cell(row,c)}</td>`).join('')}${actions?`<td class="td-actions"><button class="btn btn-tertiary" data-edit="${this.esc(row.ID)}">수정</button></td>`:''}</tr>`).join('')}</tbody></table></div>`;
   },
   cell(row, col) {
-    const value = row[col.key];
-    if (col.type === 'status') return this.badge(value);
-    if (col.type === 'progress') return this.progress(value);
-    if (col.type === 'pre') return `<div class="cell-pre" title="${this.esc(value)}">${this.esc(value)}</div>`;
-    if (col.type === 'title') return `<div class="td-title" title="${this.esc(value)}">${this.esc(value)}</div>`;
-    return `<div class="cell-text" title="${this.esc(value)}">${this.esc(value || '')}</div>`;
+  const value = row[col.key];
+
+  if (col.type === 'status') return this.badge(value);
+  if (col.type === 'progress') return this.progress(value);
+
+  const safe = this.esc(value || '');
+
+  if (col.type === 'pre') {
+    return `<div class="cell cell-pre clamp-2" title="${safe}">${safe}</div>`;
+  }
+
+  if (col.type === 'title') {
+    return `<div class="cell cell-title clamp-1" title="${safe}">${safe}</div>`;
+  }
+
+  return `<div class="cell cell-text clamp-1" title="${safe}">${safe}</div>`;
   },
   formField({ id, label, type='text', value='', required=false, options='', placeholder='입력하세요.', rows=4 }) {
     const req = required ? '<b class="required">*</b>' : '';
