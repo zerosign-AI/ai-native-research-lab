@@ -125,7 +125,6 @@ ANP.ui = {
   return `<div class="cell cell-text clamp-1" title="${safe}">${safe}</div>`;
   },
 
-formField({ id, label, type='text', value='', required=false, options='', placeholder='입력하세요.', rows=4 }) {
   formField({ id, label, type='text', value='', required=false, options='', placeholder='입력하세요.', rows=4 }) {
     const req = required ? '<b class="required">*</b>' : '';
     if (type === 'select') return `<label class="field"><span>${this.esc(label)} ${req}</span><select id="${id}" class="select">${options}</select></label>`;
