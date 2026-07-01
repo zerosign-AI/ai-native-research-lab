@@ -1,6 +1,6 @@
 ANP.app = {
   async init() {
-    document.getElementById('app-version').textContent = window.ANP_CONFIG?.APP_VERSION || 'v1.0.0-rc2';
+    document.getElementById('app-version').textContent = window.ANP_CONFIG?.APP_VERSION || 'v1.0.0-rc5';
     document.getElementById('btn-open-session').onclick = () => this.openSession();
     document.getElementById('current-topic').onchange = e => { ANP.state.currentTopicId = e.target.value; this.render(); };
     await this.load();
