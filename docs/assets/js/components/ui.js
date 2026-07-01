@@ -123,13 +123,6 @@ ANP.ui = {
   }
 
   return `<div class="cell cell-text clamp-1" title="${safe}">${safe}</div>`;
-  }
-
-  if (col.type === 'title') {
-    return `<div class="cell cell-title clamp-1" title="${safe}">${safe}</div>`;
-  }
-
-    return `<div class="cell cell-text clamp-1" title="${safe}">${safe}</div>`;
   },
 
 formField({ id, label, type='text', value='', required=false, options='', placeholder='입력하세요.', rows=4 }) {
