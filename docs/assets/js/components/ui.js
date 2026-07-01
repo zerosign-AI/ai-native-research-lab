@@ -115,7 +115,14 @@ ANP.ui = {
   const safe = this.esc(value || '');
 
   if (col.type === 'pre') {
-    return `<div class="cell cell-pre clamp-2" title="${safe}">${safe}</div>`;
+    return `<div class="cell cell-pre clamp-1" title="${safe}">${safe}</div>`;
+  }
+
+  if (col.type === 'title') {
+    return `<div class="cell cell-title clamp-1" title="${safe}">${safe}</div>`;
+  }
+
+  return `<div class="cell cell-text clamp-1" title="${safe}">${safe}</div>`;
   }
 
   if (col.type === 'title') {
