@@ -6,13 +6,31 @@ ANP.api = {
     return url;
   },
   async request(params = {}) {
-    const url = new URL(this.endpoint());
-    Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
+  const url = new URL(this.endpoint());
+  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
+
+  console.log("Request URL:", url.toString());
+
+  try {
     const res = await fetch(url.toString(), { method: 'GET' });
-    const json = await res.json();
+
+    console.log("Status:", res.status);
+    console.log("OK:", res.ok);
+
+    const text = await res.text();
+    console.log("Response:", text);
+
+    const json = JSON.parse(text);
+
     if (!json.ok) throw new Error(json.message || '요청에 실패했습니다.');
+
     return json;
-  },
+
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+},
   async mutate(action, payload = {}) {
     const body = {
       action,
