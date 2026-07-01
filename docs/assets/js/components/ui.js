@@ -64,13 +64,39 @@ ANP.ui = {
     return `<div class="filter-form"><input class="input filter-input" data-filter="${this.esc(key)}" value="${this.esc(value)}" placeholder="검색어를 입력하세요." /><button class="btn btn-tertiary" data-clear-filter="${this.esc(key)}">초기화</button></div>`;
   },
   bindFilters() {
-    document.querySelectorAll('[data-filter]').forEach(el => {
-      el.oninput = e => { ANP.state.filters[e.target.dataset.filter] = e.target.value; ANP.app.render(); };
-    });
-    document.querySelectorAll('[data-clear-filter]').forEach(btn => {
-      btn.onclick = () => { ANP.state.filters[btn.dataset.clearFilter] = ''; ANP.app.render(); };
-    });
-  },
+  document.querySelectorAll('[data-filter]').forEach(el => {
+    let composing = false;
+
+    el.oncompositionstart = () => {
+      composing = true;
+    };
+
+    el.oncompositionend = e => {
+      composing = false;
+      ANP.state.filters[e.target.dataset.filter] = e.target.value;
+      ANP.app.render();
+    };
+
+    el.onkeydown = e => {
+      if (e.key === 'Enter') {
+        ANP.state.filters[e.target.dataset.filter] = e.target.value;
+        ANP.app.render();
+      }
+    };
+
+    el.oninput = e => {
+      if (composing) return;
+      ANP.state.filters[e.target.dataset.filter] = e.target.value;
+    };
+  });
+
+  document.querySelectorAll('[data-clear-filter]').forEach(btn => {
+    btn.onclick = () => {
+      ANP.state.filters[btn.dataset.clearFilter] = '';
+      ANP.app.render();
+    };
+  });
+},
   applyFilter(rows, key, fields) {
     const q = String(ANP.state.filters[key] || '').trim().toLowerCase();
     if (!q) return rows || [];
