@@ -63,12 +63,13 @@ Frontend code may derive display fields such as member labels, role labels, owne
 
 ## Authentication And Authorization
 
-Runtime access is controlled by Google Apps Script and `02_Members`.
+Runtime access is controlled by Apps Script mutation checks and `02_Members`.
 
-- Apps Script Web App must be deployed so Google login is required and the active user email is available.
-- `Session.getActiveUser().getEmail()` must match `02_Members.Email` for read access.
-- POST mutations additionally require the existing `writeKey` and `userId` request fields.
-- The submitted `userId` must identify the same active member whose `Email` matches the Google login account.
+- GitHub Pages must call an Apps Script Web App deployment that allows cross-origin fetch from the public frontend.
+- OAuth Client ID is not assumed for this project.
+- GET data access is read-only and does not require Google account identity inside the frontend.
+- POST mutations require the existing `writeKey` and `userId` request fields.
+- The submitted `userId` must exist in `02_Members` with `Status` set to `사용`.
 - Role authorization uses `02_Members.Role`: `admin` for structural mutations, `member` for own opinions, and `viewer` as read-only.
 
 ## POST Request

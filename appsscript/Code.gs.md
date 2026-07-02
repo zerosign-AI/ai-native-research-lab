@@ -33,12 +33,7 @@ const ACTIONS = {
 };
 
 function doGet(e) {
-  try {
-    requireGoogleMember_();
-    return json_({ ok: true, data: getBoardData_() });
-  } catch (err) {
-    return json_({ ok: false, message: err.message || String(err) });
-  }
+  return json_({ ok: true, data: getBoardData_() });
 }
 
 function doPost(e) {
@@ -298,32 +293,7 @@ function requireOwnerOrAdmin_(userId, ownerId) {
 function getActiveUser_(userId) {
   const user = rows_(SHEETS.MEMBERS).find(member => String(member.ID) === String(userId));
   if (!user || user.Status !== '사용') throw new Error('사용 가능한 작성자 정보가 없습니다.');
-  assertGoogleEmailMatches_(user);
   return user;
-}
-
-function requireGoogleMember_() {
-  const email = getGoogleEmail_();
-  const user = rows_(SHEETS.MEMBERS).find(member => normalizeEmail_(member.Email) === email);
-  if (!user || user.Status !== '사용') throw new Error('등록된 Google 계정이 아닙니다. 02_Members.Email과 로그인 계정을 확인하세요.');
-  return user;
-}
-
-function assertGoogleEmailMatches_(user) {
-  const email = getGoogleEmail_();
-  const memberEmail = normalizeEmail_(user.Email);
-  if (!memberEmail) throw new Error('사용자 이메일이 등록되어 있지 않습니다. 02_Members.Email을 입력하세요.');
-  if (memberEmail !== email) throw new Error('선택한 작성자와 Google 로그인 계정이 일치하지 않습니다.');
-}
-
-function getGoogleEmail_() {
-  const email = normalizeEmail_(Session.getActiveUser().getEmail());
-  if (!email) throw new Error('Google 로그인 이메일을 확인할 수 없습니다. Apps Script 배포를 로그인 사용자 실행 및 Google 계정 접근으로 설정하세요.');
-  return email;
-}
-
-function normalizeEmail_(email) {
-  return String(email || '').trim().toLowerCase();
 }
 
 function getRowById_(sheetName, id) {

@@ -79,6 +79,24 @@ Protected:
 - JSON response envelope unchanged.
 - Existing request fields preserved.
 
+## OAuth-Free Authorization Recovery
+
+Status: implemented locally, not committed
+
+Changes:
+
+- Removed Apps Script `Session.getActiveUser()` dependency because GitHub Pages fetch cannot reliably use Google-login-gated Apps Script without OAuth Client ID.
+- Restored GET data loading for cross-origin GitHub Pages usage.
+- Kept server-side mutation checks based on `writeKey`, active `userId`, and `02_Members.Role`.
+- Updated writing-info guidance to reflect the OAuth-free authorization model.
+
+Protected:
+
+- Spreadsheet schema unchanged.
+- API endpoint unchanged.
+- JSON response envelope unchanged.
+- Existing request fields preserved.
+
 ## Future Entries
 
 Future changes should use this format:
