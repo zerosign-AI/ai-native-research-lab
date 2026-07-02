@@ -40,20 +40,25 @@ ANP.pages = {
 
   dashboardCurrentWork(model) {
     const roadmapCard = model.currentRoadmap ? `<div class="dashboard-item"><div class="td-title" title="${ANP.ui.esc(model.currentRoadmap.Title)}">${ANP.ui.esc(model.currentRoadmap.Title)}</div><div class="page-desc td-pre">${ANP.ui.esc(model.currentRoadmap.Note || '')}</div><div class="dashboard-item-footer">${ANP.ui.badge(model.currentRoadmap.Status)}<span>${ANP.ui.esc(model.currentRoadmap.OwnerName || '-')}</span></div>${ANP.ui.progress(model.currentRoadmap.Progress)}</div>` : `<div class="empty">등록된 로드맵이 없습니다.</div>`;
-    return `<div class="grid cols-2"><div class="card"><div class="card-head"><h2>현재 로드맵</h2></div>${roadmapCard}</div><div class="card"><div class="card-head"><h2>최근 프레임워크</h2></div>${this.recent(model.frameworks, 'Title', 'Content')}</div></div>`;
+    return `<div class="grid cols-2"><div class="card"><div class="card-head"><h2>현재 로드맵</h2></div>${roadmapCard}</div><div class="card"><div class="card-head"><h2>최근 프레임워크</h2></div>${this.recent(model.frameworks, { title:'Title', body:'Content', meta:row => [row.TopicTitle, row.Category, row.Version ? 'v' + row.Version : '', row.UpdatedAt] })}</div></div>`;
   },
 
   dashboardRecentGrid(model) {
-    return `<div class="grid cols-2"><div class="card"><div class="card-head"><h2>최근 의사결정</h2></div>${this.recent(model.decisions, 'Title', 'Decision')}</div><div class="card"><div class="card-head"><h2>최근 의견</h2></div>${this.recent(model.opinions, 'Title', 'Opinion')}</div></div>`;
+    return `<div class="grid cols-2"><div class="card"><div class="card-head"><h2>최근 의사결정</h2></div>${this.recent(model.decisions, { title:'Title', body:'Decision', meta:row => [row.TopicTitle, row.AuthorName, row.CreatedAt] })}</div><div class="card"><div class="card-head"><h2>최근 의견</h2></div>${this.recent(model.opinions, { title:'Title', body:'Opinion', meta:row => [row.TopicTitle, row.AuthorName, row.CreatedAt] })}</div></div>`;
   },
 
   dashboardQuickActions() {
     return `<div class="card"><div class="card-head"><div><h2>다음 작업</h2><p class="page-desc">현재 단계에서 팀이 이어서 작성하거나 검토할 항목입니다.</p></div></div><div class="quick-actions"><button class="btn btn-primary" data-add="opinion">의견 등록</button><button class="btn btn-secondary" data-add="decision">의사결정 등록</button><button class="btn btn-tertiary" data-add="roadmap">로드맵 추가</button><button class="btn btn-tertiary" data-add="framework">프레임워크 추가</button></div></div>`;
   },
 
-  recent(rows, title, body) {
+  recent(rows, config) {
     if (!rows.length) return `<div class="empty">등록된 항목이 없습니다.</div>`;
-    return rows.slice(0, 5).map(row => `<div class="list-card"><div class="td-title" title="${ANP.ui.esc(row[title])}">${ANP.ui.esc(row[title])}</div><p class="page-desc" title="${ANP.ui.esc(row[body])}">${ANP.ui.esc(row[body])}</p><div>${ANP.ui.badge(row.Status)}</div></div>`).join('');
+    return rows.slice(0, 5).map(row => {
+      const title = row[config.title] || '-';
+      const body = row[config.body] || '';
+      const meta = (config.meta?.(row) || []).filter(Boolean).map(item => ANP.ui.esc(item)).join(' · ');
+      return `<div class="list-card"><div class="list-card-head"><div class="td-title" title="${ANP.ui.esc(title)}">${ANP.ui.esc(title)}</div>${ANP.ui.badge(row.Status)}</div><p class="page-desc" title="${ANP.ui.esc(body)}">${ANP.ui.esc(body)}</p>${meta ? `<div class="list-card-meta">${meta}</div>` : ''}</div>`;
+    }).join('');
   },
 
   topics() {

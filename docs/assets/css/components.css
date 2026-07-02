@@ -464,19 +464,31 @@
 
 .list-card {
   display: grid;
-  gap: 6px;
-  padding: var(--space-3) 0;
+  gap: var(--space-2);
+  padding: 14px 0;
   border-bottom: 1px solid var(--line);
   min-width: 0;
   overflow: hidden;
 }
 
+.list-card:first-of-type {
+  padding-top: 0;
+}
+
 .list-card:last-child {
   border-bottom: 0;
+  padding-bottom: 0;
 }
 
 .list-card > * {
   min-width: 0;
+}
+
+.list-card-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-2);
+  align-items: start;
 }
 
 .list-card .td-title {
@@ -485,8 +497,18 @@
 }
 
 .list-card .page-desc {
+  margin: 0;
   line-height: 1.55;
   max-height: 3.1em;
+}
+
+.list-card-meta {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .dashboard-hero-grid {
