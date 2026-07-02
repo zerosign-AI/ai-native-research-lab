@@ -31,7 +31,7 @@ ANP.pages = {
     const topicDesc = model.selectedTopic?.Description || '등록된 모든 연구과제를 통합해서 봅니다.';
     const roadmapTitle = model.currentRoadmap?.Title || '-';
     const roadmapNote = model.currentRoadmap?.Note || '진행 중인 로드맵이 없습니다.';
-    return `<div class="card dashboard-hero"><div class="card-head"><div><h2>현재 연구 상태</h2><p class="page-desc">${ANP.ui.esc(topicTitle)} 기준으로 현재 진행 상황을 확인합니다.</p></div><div>${ANP.ui.badge(model.selectedTopic?.Status || '전체')}</div></div><div class="dashboard-hero-grid"><div><div class="summary-label">현재 연구과제</div><div class="summary-value" title="${ANP.ui.esc(topicTitle)}">${ANP.ui.esc(topicTitle)}</div><div class="summary-desc">${ANP.ui.esc(topicDesc)}</div></div><div><div class="summary-label">현재 단계</div><div class="summary-value" title="${ANP.ui.esc(roadmapTitle)}">${ANP.ui.esc(roadmapTitle)}</div><div class="summary-desc">${ANP.ui.esc(roadmapNote)}</div></div><div><div class="summary-label">로드맵 진행률</div><div class="summary-value">${model.avg}%</div>${ANP.ui.progress(model.avg)}<div class="summary-desc">${model.done}/${model.roadmap.length} 완료 · 진행중 ${model.inProgress}</div></div></div></div>`;
+    return `<div class="card dashboard-hero"><div class="card-head"><div><h2>현재 연구 상태</h2><p class="page-desc">${ANP.ui.esc(topicTitle)} 기준으로 현재 진행 상황을 확인합니다.</p></div><div>${ANP.ui.badge(model.selectedTopic?.Status || '전체')}</div></div><div class="dashboard-hero-grid"><div><div class="summary-label">현재 연구과제</div><div class="summary-value" title="${ANP.ui.esc(topicTitle)}">${ANP.ui.esc(topicTitle)}</div><div class="summary-desc">${ANP.ui.esc(topicDesc)}</div></div><div><div class="summary-label">현재 로드맵 항목</div><div class="summary-value" title="${ANP.ui.esc(roadmapTitle)}">${ANP.ui.esc(roadmapTitle)}</div><div class="summary-desc">${ANP.ui.esc(roadmapNote)}</div></div><div><div class="summary-label">로드맵 진행률</div><div class="summary-value">${model.avg}%</div>${ANP.ui.progress(model.avg)}<div class="summary-desc">${model.done}/${model.roadmap.length} 완료 · 진행중 ${model.inProgress}</div></div></div></div>`;
   },
 
   dashboardMetrics(model) {
@@ -48,7 +48,7 @@ ANP.pages = {
   },
 
   dashboardQuickActions() {
-    return `<div class="card"><div class="card-head"><div><h2>다음 작업</h2><p class="page-desc">현재 단계에서 팀이 이어서 작성하거나 검토할 항목입니다.</p></div></div><div class="quick-actions"><button class="btn btn-primary" data-add="opinion">의견 등록</button><button class="btn btn-secondary" data-add="decision">의사결정 등록</button><button class="btn btn-tertiary" data-add="roadmap">로드맵 추가</button><button class="btn btn-tertiary" data-add="framework">프레임워크 추가</button></div></div>`;
+    return `<div class="card"><div class="card-head"><div><h2>다음 작업</h2><p class="page-desc">현재 로드맵 항목에서 팀이 이어서 작성하거나 검토할 항목입니다.</p></div></div><div class="quick-actions"><button class="btn btn-primary" data-add="opinion">의견 등록</button><button class="btn btn-secondary" data-add="decision">의사결정 등록</button><button class="btn btn-tertiary" data-add="roadmap">로드맵 추가</button><button class="btn btn-tertiary" data-add="framework">프레임워크 추가</button></div></div>`;
   },
 
   recent(rows, config) {
@@ -68,7 +68,7 @@ ANP.pages = {
 
   roadmap() {
     const rows = ANP.ui.applyFilter(this.scoped(ANP.state.data?.roadmap || []), 'roadmap', ['Title', 'TopicTitle', 'OwnerName', 'Status', 'Note']);
-    return `<div class="section-stack"><div class="card">${ANP.ui.toolbar({ title:'로드맵', desc:'진행 단계와 담당자를 관리합니다.', filterKey:'roadmap', actionLabel:'로드맵 추가', actionType:'roadmap' })}${ANP.ui.table(rows, [{ key:'TopicTitle', label:'연구과제', type:'title', width:'22%' }, { key:'Title', label:'단계', type:'title', width:'20%' }, { key:'Status', label:'상태', type:'status', width:'10%' }, { key:'Progress', label:'진행률', type:'progress', width:'12%' }, { key:'OwnerName', label:'담당자', width:'12%' }, { key:'Note', label:'메모', type:'pre', width:'24%' }], this.detailOptions('roadmap'))}</div></div>`;
+    return `<div class="section-stack"><div class="card">${ANP.ui.toolbar({ title:'로드맵', desc:'로드맵 항목과 담당자를 관리합니다.', filterKey:'roadmap', actionLabel:'로드맵 추가', actionType:'roadmap' })}${ANP.ui.table(rows, [{ key:'TopicTitle', label:'연구과제', type:'title', width:'22%' }, { key:'Title', label:'로드맵 항목', type:'title', width:'20%' }, { key:'Status', label:'상태', type:'status', width:'10%' }, { key:'Progress', label:'진행률', type:'progress', width:'12%' }, { key:'OwnerName', label:'담당자', width:'12%' }, { key:'Note', label:'메모', type:'pre', width:'24%' }], this.detailOptions('roadmap'))}</div></div>`;
   },
 
   opinion() {
@@ -93,7 +93,22 @@ ANP.pages = {
 
   members() {
     const rows = ANP.ui.applyFilter(ANP.state.data?.members || [], 'members', ['LdapID', 'Name', 'Email', 'RoleLabel', 'Status']);
-    return `<div class="section-stack"><div class="card">${ANP.ui.toolbar({ title:'권한관리', desc:'사용자와 역할을 관리합니다. 사번(ID)은 내부키로 사용하며 목록에는 노출하지 않습니다.', filterKey:'members', actionLabel:'사용자 추가', actionType:'member' })}${ANP.ui.table(rows, [{ key:'LdapDisplay', label:'LdapID (이름)', type:'title', width:'22%' }, { key:'Email', label:'이메일', width:'24%' }, { key:'Department', label:'부서', width:'14%' }, { key:'Team', label:'팀', width:'14%' }, { key:'RoleLabel', label:'역할', width:'12%' }, { key:'Status', label:'상태', type:'status', width:'14%' }], this.detailOptions('members'))}</div></div>`;
+    return `<div class="section-stack">${this.permissionMatrix()}<div class="card">${ANP.ui.toolbar({ title:'권한관리', desc:'사용자와 역할을 관리합니다. 사번(ID)은 내부키로 사용하며 목록에는 노출하지 않습니다.', filterKey:'members', actionLabel:'사용자 추가', actionType:'member' })}${ANP.ui.table(rows, [{ key:'LdapDisplay', label:'LdapID (이름)', type:'title', width:'22%' }, { key:'Email', label:'이메일', width:'24%' }, { key:'Department', label:'부서', width:'14%' }, { key:'Team', label:'팀', width:'14%' }, { key:'RoleLabel', label:'역할', width:'12%' }, { key:'Status', label:'상태', type:'status', width:'14%' }], this.detailOptions('members'))}</div></div>`;
+  },
+
+  permissionMatrix() {
+    const rows = [
+      ['대시보드', '조회', '조회', '조회'],
+      ['연구과제', '조회', '조회', '조회/추가/수정/삭제'],
+      ['로드맵', '조회', '조회', '조회/추가/수정/삭제'],
+      ['의견', '조회', '조회/추가/본인 수정·삭제', '조회/추가/수정/삭제'],
+      ['의사결정', '조회', '조회', '조회/추가/수정/삭제'],
+      ['프레임워크', '조회', '조회', '조회/추가/수정/삭제'],
+      ['설정', '조회', '조회', '조회'],
+      ['권한관리', '조회', '조회', '조회/사용자 추가·수정·삭제']
+    ];
+    const body = rows.map(row => `<tr><th>${ANP.ui.esc(row[0])}</th><td>${ANP.ui.esc(row[1])}</td><td>${ANP.ui.esc(row[2])}</td><td>${ANP.ui.esc(row[3])}</td></tr>`).join('');
+    return `<div class="card permission-card"><div class="card-head"><div><h2>권한 매트릭스</h2><p class="page-desc">역할별 메뉴 접근과 작성/수정/삭제 가능 범위입니다.</p></div></div><div class="permission-table-wrap"><table class="permission-table"><thead><tr><th>메뉴</th><th>viewer</th><th>member</th><th>admin</th></tr></thead><tbody>${body}</tbody></table></div><p class="help-text">실제 변경 권한은 Apps Script에서 팀 암호, 사용자 상태, 역할 기준으로 최종 검증합니다.</p></div>`;
   },
 
   bind() {
@@ -242,7 +257,7 @@ ANP.pages = {
     const data = ANP.state.data || {};
     return {
       topics: { title:row => row.Title || '연구과제 상세', rows:() => data.topics || [], fields:[{ key:'ID', label:'ID' }, { key:'Title', label:'제목' }, { key:'Description', label:'설명' }, { key:'OwnerName', label:'담당자' }, { key:'Status', label:'상태' }, { key:'CreatedAt', label:'생성일' }, { key:'UpdatedAt', label:'수정일' }] },
-      roadmap: { title:row => row.Title || '로드맵 상세', rows:() => data.roadmap || [], fields:[{ key:'ID', label:'ID' }, { key:'TopicTitle', label:'연구과제' }, { key:'Title', label:'단계' }, { key:'Status', label:'상태' }, { key:'Progress', label:'진행률' }, { key:'OwnerName', label:'담당자' }, { key:'Note', label:'메모' }, { key:'UpdatedAt', label:'수정일' }] },
+      roadmap: { title:row => row.Title || '로드맵 상세', rows:() => data.roadmap || [], fields:[{ key:'ID', label:'ID' }, { key:'TopicTitle', label:'연구과제' }, { key:'Title', label:'로드맵 항목' }, { key:'Status', label:'상태' }, { key:'Progress', label:'진행률' }, { key:'OwnerName', label:'담당자' }, { key:'Note', label:'메모' }, { key:'UpdatedAt', label:'수정일' }] },
       opinion: { title:row => row.Title || '의견 상세', rows:() => data.opinions || [], fields:[{ key:'ID', label:'ID' }, { key:'TopicTitle', label:'연구과제' }, { key:'Title', label:'제목' }, { key:'Opinion', label:'의견' }, { key:'AuthorName', label:'작성자' }, { key:'Status', label:'상태' }, { key:'CreatedAt', label:'작성일' }] },
       decision: { title:row => row.Title || '의사결정 상세', rows:() => data.decisions || [], fields:[{ key:'ID', label:'ID' }, { key:'TopicTitle', label:'연구과제' }, { key:'Title', label:'제목' }, { key:'Decision', label:'결정' }, { key:'Reason', label:'이유' }, { key:'AuthorName', label:'작성자' }, { key:'Status', label:'상태' }, { key:'CreatedAt', label:'작성일' }] },
       framework: { title:row => row.Title || '프레임워크 상세', rows:() => data.frameworks || [], fields:[{ key:'ID', label:'ID' }, { key:'TopicTitle', label:'연구과제' }, { key:'Category', label:'분류' }, { key:'Title', label:'제목' }, { key:'Content', label:'내용' }, { key:'Status', label:'상태' }, { key:'Version', label:'버전' }, { key:'UpdatedAt', label:'수정일' }] },
@@ -331,7 +346,7 @@ ANP.pages = {
         deleteAction:'deleteRoadmap',
         fields:['topicId', 'title', 'status', 'progress', 'ownerId', 'note'],
         optional:['note'],
-        body:() => `${ANP.ui.formField({ id:'topicId', label:'연구과제', type:'select', required:true, options:ANP.ui.topicOptions(selectedTopic) })}${ANP.ui.formField({ id:'title', label:'단계명', required:true, value:value('Title') })}${ANP.ui.formField({ id:'status', label:'상태', type:'select', required:true, options:ANP.ui.codeOptions('ROADMAP_STATUS', value('Status', '초안')) })}${ANP.ui.formField({ id:'progress', label:'진행률', type:'number', required:true, value:value('Progress', '0') })}${ANP.ui.formField({ id:'ownerId', label:'담당자', type:'select', required:true, options:ANP.ui.memberOptions(value('OwnerID')) })}${ANP.ui.formField({ id:'note', label:'메모', type:'textarea', value:value('Note') })}`
+        body:() => `${ANP.ui.formField({ id:'topicId', label:'연구과제', type:'select', required:true, options:ANP.ui.topicOptions(selectedTopic) })}${ANP.ui.formField({ id:'title', label:'로드맵 항목명', required:true, value:value('Title'), placeholder:'예: 현재 업무 분석, 프로토타입 검증, 운영 전환' })}${ANP.ui.formField({ id:'status', label:'상태', type:'select', required:true, options:ANP.ui.codeOptions('ROADMAP_STATUS', value('Status', '초안')) })}${ANP.ui.formField({ id:'progress', label:'진행률', type:'number', required:true, value:value('Progress', '0') })}${ANP.ui.formField({ id:'ownerId', label:'담당자', type:'select', required:true, options:ANP.ui.memberOptions(value('OwnerID')) })}${ANP.ui.formField({ id:'note', label:'메모', type:'textarea', value:value('Note') })}`
       },
       topic: {
         title:`연구과제 ${mode === 'edit' ? '수정' : '추가'}`,
