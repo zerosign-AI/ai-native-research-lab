@@ -56,31 +56,45 @@ ANP.pages = {
     const topic = (data.topics || []).find(item => item.ID === ANP.state.currentTopicId);
     if (!topic) return this.labTopicPicker(data.topics || []);
     const model = this.dashboardModel();
-    return `<div class="section-stack">${this.labHero(topic, model)}${this.labWorkflow(model)}${this.labKnowledgeGrid(model)}</div>`;
+    return `<div class="section-stack lab-workspace">${this.labCommandCenter(topic, model)}${this.labFlowBoard(model)}${this.labKnowledgeShelf(model)}</div>`;
   },
 
   labTopicPicker(topics) {
     const cards = topics.length ? topics.map(topic => `<button class="topic-pick-card" data-topic-pick="${ANP.ui.esc(topic.ID)}"><span>${ANP.ui.esc(topic.Title)}</span><small>${ANP.ui.esc(topic.OwnerName || '-')} · ${ANP.ui.esc(topic.Status || '-')}</small></button>`).join('') : `<div class="empty">등록된 연구과제가 없습니다.</div>`;
-    return `<div class="section-stack"><div class="card lab-empty"><div class="card-head"><div><h2>연구실을 시작하세요</h2><p class="page-desc">연구과제를 선택하면 로드맵, 의견, 의사결정, 프레임워크를 한 화면에서 볼 수 있습니다.</p></div></div><div class="topic-pick-list">${cards}</div></div></div>`;
+    return `<div class="section-stack"><div class="card lab-empty"><div class="card-head"><div><h2>연구실을 시작하세요</h2><p class="page-desc">연구과제를 선택하면 로드맵, 의견, 의사결정, 프레임워크가 하나의 작업 흐름으로 정리됩니다.</p></div></div><div class="topic-pick-list">${cards}</div></div></div>`;
   },
 
-  labHero(topic, model) {
-    return `<div class="card lab-hero"><div class="card-head"><div><h2>${ANP.ui.esc(topic.Title)}</h2><p class="page-desc">${ANP.ui.esc(topic.Description || '연구과제 설명이 없습니다.')}</p></div>${ANP.ui.badge(topic.Status)}</div><div class="lab-hero-grid"><div><div class="summary-label">담당자</div><div class="summary-value" title="${ANP.ui.esc(topic.OwnerName || '-')}">${ANP.ui.esc(topic.OwnerName || '-')}</div></div><div><div class="summary-label">현재 로드맵 항목</div><div class="summary-value" title="${ANP.ui.esc(model.currentRoadmap?.Title || '-')}">${ANP.ui.esc(model.currentRoadmap?.Title || '-')}</div></div><div><div class="summary-label">진행률</div><div class="summary-value">${model.avg}%</div>${ANP.ui.progress(model.avg)}</div></div></div>`;
+  labCommandCenter(topic, model) {
+    const openOpinions = model.opinions.filter(row => !['완료', '닫힘', '종료'].includes(row.Status)).length;
+    const nextAction = this.labNextAction(model);
+    return `<div class="lab-command"><div class="lab-command-main"><div class="lab-kicker">Research Lab</div><h2>${ANP.ui.esc(topic.Title)}</h2><p>${ANP.ui.esc(topic.Description || '이 연구과제의 목표와 범위를 정리해 주세요.')}</p><div class="lab-command-meta"><span>${ANP.ui.badge(topic.Status)}</span><span>담당 ${ANP.ui.esc(topic.OwnerName || '-')}</span><span>진행률 ${model.avg}%</span></div></div><div class="lab-next-card"><div class="summary-label">다음 추천 행동</div><div class="lab-next-title">${ANP.ui.esc(nextAction.title)}</div><p>${ANP.ui.esc(nextAction.desc)}</p><button class="btn btn-primary" data-add="${ANP.ui.esc(nextAction.type)}">${ANP.ui.esc(nextAction.label)}</button></div><div class="lab-pulse"><div><strong>${model.roadmap.length}</strong><span>로드맵</span></div><div><strong>${openOpinions}</strong><span>열린 의견</span></div><div><strong>${model.decisions.length}</strong><span>결정</span></div><div><strong>${model.frameworks.length}</strong><span>산출물</span></div></div></div>`;
   },
 
-  labWorkflow(model) {
-    return `<div class="grid cols-2"><div class="card"><div class="card-head"><div><h2>로드맵</h2><p class="page-desc">현재 진행 항목과 다음 작업을 관리합니다.</p></div><button class="btn btn-primary" data-add="roadmap">추가</button></div>${this.labList(model.roadmap, { title:'Title', body:'Note', meta:row => [row.Status, row.OwnerName, row.Progress ? row.Progress + '%' : '0%'] })}</div><div class="card"><div class="card-head"><div><h2>의견</h2><p class="page-desc">열린 의견과 검토할 논점을 모읍니다.</p></div><button class="btn btn-primary" data-add="opinion">등록</button></div>${this.labList(model.opinions, { title:'Title', body:'Opinion', meta:row => [row.Status, row.AuthorName, row.CreatedAt] })}</div></div>`;
+  labNextAction(model) {
+    if (!model.roadmap.length) return { type:'roadmap', label:'로드맵 추가', title:'먼저 길을 잡으세요', desc:'연구가 어디까지 왔는지 보이도록 첫 로드맵 항목을 만듭니다.' };
+    if (!model.opinions.length) return { type:'opinion', label:'의견 등록', title:'논점을 열어보세요', desc:'현재 단계에서 관찰한 문제, 제안, 우려를 의견으로 남깁니다.' };
+    if (!model.decisions.length) return { type:'decision', label:'의사결정 등록', title:'합의를 고정하세요', desc:'반복 논의를 줄이기 위해 결정과 근거를 남깁니다.' };
+    return { type:'framework', label:'프레임워크 추가', title:'재사용 가능한 형태로 정리하세요', desc:'결정된 내용을 팀이 다시 쓸 수 있는 구조나 기준으로 남깁니다.' };
   },
 
-  labKnowledgeGrid(model) {
-    return `<div class="grid cols-2"><div class="card"><div class="card-head"><div><h2>의사결정</h2><p class="page-desc">결정과 근거를 추적합니다.</p></div><button class="btn btn-secondary" data-add="decision">등록</button></div>${this.labList(model.decisions, { title:'Title', body:'Decision', meta:row => [row.Status, row.AuthorName, row.CreatedAt] })}</div><div class="card"><div class="card-head"><div><h2>프레임워크</h2><p class="page-desc">합의된 구조와 산출물을 정리합니다.</p></div><button class="btn btn-secondary" data-add="framework">추가</button></div>${this.labList(model.frameworks, { title:'Title', body:'Content', meta:row => [row.Category, row.Status, row.Version ? 'v' + row.Version : ''] })}</div></div>`;
+  labFlowBoard(model) {
+    return `<div class="lab-board"><div class="card lab-roadmap"><div class="card-head"><div><h2>연구 진행 흐름</h2><p class="page-desc">로드맵을 따라 현재 위치와 다음 단계를 확인합니다.</p></div><button class="btn btn-secondary" data-add="roadmap">항목 추가</button></div>${this.labTimeline(model.roadmap)}</div><div class="lab-side-stack"><div class="card"><div class="card-head"><div><h2>열린 의견</h2><p class="page-desc">지금 논의해야 할 관찰과 우려입니다.</p></div><button class="btn btn-primary" data-add="opinion">등록</button></div>${this.labList(model.opinions, { title:'Title', body:'Opinion', meta:row => [row.Status, row.AuthorName, row.CreatedAt] })}</div><div class="card lab-current"><div class="summary-label">현재 집중 항목</div><div class="lab-current-title">${ANP.ui.esc(model.currentRoadmap?.Title || '진행 중인 로드맵이 없습니다.')}</div><p>${ANP.ui.esc(model.currentRoadmap?.Note || '현재 집중할 작업과 막힌 지점을 메모로 남겨 주세요.')}</p>${model.currentRoadmap ? ANP.ui.progress(model.currentRoadmap.Progress) : ''}</div></div></div>`;
+  },
+
+  labTimeline(rows) {
+    if (!rows.length) return `<div class="empty">로드맵을 추가하면 연구 흐름이 타임라인으로 표시됩니다.</div>`;
+    return `<div class="lab-timeline">${rows.map((row, index) => `<div class="lab-step ${row.Status === '완료' ? 'done' : row.Status === '진행중' ? 'active' : ''}"><div class="lab-step-marker">${index + 1}</div><div class="lab-step-body"><div class="lab-step-head"><strong title="${ANP.ui.esc(row.Title || '-')}">${ANP.ui.esc(row.Title || '-')}</strong>${ANP.ui.badge(row.Status)}</div><p title="${ANP.ui.esc(row.Note || '')}">${ANP.ui.esc(row.Note || '메모가 없습니다.')}</p><div class="lab-step-meta"><span>${ANP.ui.esc(row.OwnerName || '-')}</span><span>${ANP.ui.esc(row.Progress || '0')}%</span></div>${ANP.ui.progress(row.Progress)}</div></div>`).join('')}</div>`;
+  },
+
+  labKnowledgeShelf(model) {
+    return `<div class="lab-shelf"><div class="card"><div class="card-head"><div><h2>결정 보드</h2><p class="page-desc">합의된 결론과 판단 근거를 추적합니다.</p></div><button class="btn btn-secondary" data-add="decision">등록</button></div>${this.labList(model.decisions, { title:'Title', body:'Decision', meta:row => [row.Status, row.AuthorName, row.CreatedAt] })}</div><div class="card"><div class="card-head"><div><h2>프레임워크 선반</h2><p class="page-desc">결정된 내용을 재사용 가능한 산출물로 보관합니다.</p></div><button class="btn btn-secondary" data-add="framework">추가</button></div>${this.labList(model.frameworks, { title:'Title', body:'Content', meta:row => [row.Category, row.Status, row.Version ? 'v' + row.Version : ''] })}</div></div>`;
   },
 
   labList(rows, config) {
     if (!rows.length) return `<div class="empty">등록된 항목이 없습니다.</div>`;
     return rows.slice(0, 4).map(row => {
       const meta = (config.meta?.(row) || []).filter(Boolean).map(item => ANP.ui.esc(item)).join(' · ');
-      return `<div class="list-card"><div class="list-card-head"><div class="td-title" title="${ANP.ui.esc(row[config.title] || '-')}">${ANP.ui.esc(row[config.title] || '-')}</div>${ANP.ui.badge(row.Status)}</div><p class="page-desc" title="${ANP.ui.esc(row[config.body] || '')}">${ANP.ui.esc(row[config.body] || '')}</p>${meta ? `<div class="list-card-meta">${meta}</div>` : ''}</div>`;
+      return `<div class="list-card lab-note"><div class="list-card-head"><div class="td-title" title="${ANP.ui.esc(row[config.title] || '-')}">${ANP.ui.esc(row[config.title] || '-')}</div>${ANP.ui.badge(row.Status)}</div><p class="page-desc" title="${ANP.ui.esc(row[config.body] || '')}">${ANP.ui.esc(row[config.body] || '')}</p>${meta ? `<div class="list-card-meta">${meta}</div>` : ''}</div>`;
     }).join('');
   },
 

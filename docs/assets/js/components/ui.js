@@ -81,13 +81,24 @@ ANP.ui = {
   openCoach(page) {
     const coach = ANP.constants.coaching?.[page];
     if (!coach) return;
+    const root = document.getElementById('dialog-root');
     const tips = (coach.tips || []).map(tip => `<li>${this.esc(tip)}</li>`).join('');
     const caution = coach.caution ? `<div class="coach-caution"><strong>주의</strong><p>${this.esc(coach.caution)}</p></div>` : '';
-    this.modal({
-      title: coach.title,
-      body: `<div class="coach-panel"><p class="coach-lead">${this.esc(coach.lead || '')}</p><ol class="coach-tips">${tips}</ol>${caution}</div>`,
-      confirmText: '확인'
+    this.closeModal();
+    root.innerHTML = `<div class="coach-backdrop" data-coach-close><aside class="coach-drawer" role="dialog" aria-modal="true" aria-labelledby="coach-title" tabindex="-1"><div class="coach-drawer-head"><div><span>Context Coach</span><h3 id="coach-title">${this.esc(coach.title)}</h3></div><button class="btn btn-tertiary" data-coach-close>닫기</button></div><div class="coach-panel"><p class="coach-lead">${this.esc(coach.lead || '')}</p><ol class="coach-tips">${tips}</ol>${caution}</div></aside></div>`;
+
+    root.querySelectorAll('[data-coach-close]').forEach(el => {
+      el.onclick = e => {
+        if (e.target === el) this.closeModal();
+      };
     });
+
+    const onKeydown = e => {
+      if (e.key === 'Escape') this.closeModal();
+    };
+    document.addEventListener('keydown', onKeydown);
+    this.activeModalCleanup = () => document.removeEventListener('keydown', onKeydown);
+    requestAnimationFrame(() => root.querySelector('.coach-drawer')?.focus());
   },
 
   badge(value) {
