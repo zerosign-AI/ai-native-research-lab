@@ -197,7 +197,7 @@ ANP.pages = {
         await ANP.api.mutate(form.updateAction, data);
         ANP.ui.closeModal();
         ANP.ui.toast('수정했습니다.', 'success');
-        await ANP.app.load();
+        ANP.app.refreshAfterMutation();
       } catch (e) {
         confirm.disabled = false;
         confirm.textContent = '수정';
@@ -229,7 +229,7 @@ ANP.pages = {
         await ANP.api.mutate(form.deleteAction, { id });
         ANP.ui.closeModal();
         ANP.ui.toast('삭제했습니다.', 'success');
-        await ANP.app.load();
+        ANP.app.refreshAfterMutation();
       } catch (e) {
         confirm.disabled = false;
         confirm.textContent = '삭제';
@@ -281,7 +281,7 @@ ANP.pages = {
         await ANP.api.mutate(form.action, data);
         ANP.ui.closeModal();
         ANP.ui.toast('저장했습니다.', 'success');
-        await ANP.app.load();
+        ANP.app.refreshAfterMutation();
       } catch (e) {
         confirm.disabled = false;
         confirm.textContent = '저장';

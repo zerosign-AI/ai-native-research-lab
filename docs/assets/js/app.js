@@ -6,7 +6,7 @@ ANP.app = {
     document.getElementById('current-topic').onchange = e => { ANP.state.currentTopicId = e.target.value; this.render(); };
     await this.load();
   },
-  async load() {
+  async load({ silent = false } = {}) {
     try {
       const json = await ANP.api.request({ action: 'data' });
       ANP.state.data = json.data || {};
@@ -16,17 +16,32 @@ ANP.app = {
       this.renderNav();
       this.render();
     } catch (e) {
+      if (silent) {
+        ANP.ui.toast('최신 데이터 동기화에 실패했습니다. 새로고침해 주세요.', 'warning');
+        return;
+      }
       ANP.ui.toast(e.message || '데이터를 불러오지 못했습니다.', 'error');
       document.getElementById('content').innerHTML = `<div class="empty">${ANP.ui.esc(e.message || '연결 오류가 발생했습니다.')}</div>`;
     }
   },
+  refreshAfterMutation() {
+    this.render();
+    this.load({ silent: true });
+  },
   applyDerivedFields() {
-    const members = ANP.state.data.members || [];
-    const codeMap = Object.fromEntries((ANP.state.data.codes || []).map(c => [`${c.Group}:${c.Value}`, c.Label]));
+    const data = ANP.state.data || {};
+    const members = data.members || [];
+    const codeMap = Object.fromEntries((data.codes || []).map(c => [`${c.Group}:${c.Value}`, c.Label]));
+    const memberLabel = member => member ? `${member.LdapID || member.ID}${member.Name ? ' (' + member.Name + ')' : ''}` : '';
+    const membersById = Object.fromEntries(members.map(member => [member.ID, member]));
     members.forEach(m => {
-      m.LdapDisplay = `${m.LdapID || m.ID}${m.Name ? ' (' + m.Name + ')' : ''}`;
+      m.LdapDisplay = memberLabel(m);
       m.RoleLabel = codeMap[`USER_ROLE:${m.Role}`] || m.Role;
     });
+    ['topics', 'roadmap', 'decisions', 'opinions', 'frameworks'].forEach(key => (data[key] || []).forEach(row => {
+      if (row.OwnerID) row.OwnerName = memberLabel(membersById[row.OwnerID]) || row.OwnerID;
+      if (row.AuthorID) row.AuthorName = memberLabel(membersById[row.AuthorID]) || row.AuthorID;
+    }));
   },
   applySettings() {
     const settings = ANP.state.data?.settings || [];
