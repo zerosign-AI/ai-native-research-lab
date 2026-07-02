@@ -1,7 +1,7 @@
 window.ANP = window.ANP || {};
 ANP.app = {
   async init() {
-    document.getElementById('app-version').textContent = window.ANP_CONFIG?.APP_VERSION || 'v1.0.0-frontend-r1';
+    document.getElementById('app-version').textContent = window.ANP_CONFIG?.APP_VERSION || window.ANP_VERSION || '-';
     document.getElementById('btn-open-session').onclick = () => this.openSession();
     document.getElementById('current-topic').onchange = e => { ANP.state.currentTopicId = e.target.value; this.render(); };
     await this.load();
@@ -57,7 +57,14 @@ ANP.app = {
   },
   renderNav() {
     const nav = document.getElementById('nav');
-    const menus = (ANP.state.data?.menu || []).filter(m => m.Enabled !== 'N').sort((a,b)=>Number(a.Order||0)-Number(b.Order||0));
+    const menus = (ANP.state.data?.menu || []).filter(m => m.Enabled !== 'N').map(m => {
+      const isLab = m.ID === 'lab' || m.ID === 'workspace' || m.Label === '연구 워크스페이스';
+      return isLab ? { ...m, ID:'lab', Label:'연구실' } : m;
+    }).filter((m, index, list) => list.findIndex(item => item.ID === m.ID) === index);
+    if (!menus.some(m => m.ID === 'lab')) {
+      menus.push({ ID:'lab', Label:'연구실', Enabled:'Y', Order:1.5, Role:'member' });
+    }
+    menus.sort((a,b)=>Number(a.Order||0)-Number(b.Order||0));
     nav.innerHTML = menus.map(m => `<button class="${m.ID === ANP.state.currentPage ? 'active' : ''}" data-page="${ANP.ui.esc(m.ID)}"><span>${ANP.ui.esc(m.Label)}</span></button>`).join('');
     nav.querySelectorAll('[data-page]').forEach(btn => { btn.onclick = () => { ANP.state.currentPage = btn.dataset.page; this.renderNav(); this.render(); }; });
   },
@@ -68,8 +75,10 @@ ANP.app = {
     document.getElementById('page-desc').textContent = meta[1];
     document.getElementById('page-eyebrow').textContent = 'AI Native Platform';
     const renderer = ANP.pages[page] || ANP.pages.dashboard;
-    document.getElementById('content').innerHTML = renderer.call(ANP.pages);
+    const content = document.getElementById('content');
+    content.innerHTML = `${renderer.call(ANP.pages)}${ANP.ui.coachButton(page)}`;
     ANP.ui.bindFilters();
+    ANP.ui.bindCoach();
     ANP.pages.bind?.();
   },
   openSession() {

@@ -7,9 +7,12 @@
   <meta name="description" content="AI Native Platform - Research Lab" />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css" />
-  <link rel="stylesheet" href="./assets/css/design-system.css?v=frontend-r7" />
-  <link rel="stylesheet" href="./assets/css/layout.css?v=frontend-r7" />
-  <link rel="stylesheet" href="./assets/css/components.css?v=frontend-r7" />
+  <script src="./version.js"></script>
+  <script>
+    ['design-system', 'layout', 'components'].forEach(name => {
+      document.write(`<link rel="stylesheet" href="./assets/css/${name}.css?v=${encodeURIComponent(window.ANP_VERSION || 'local')}" />`);
+    });
+  </script>
 </head>
 <body>
   <div id="toast-root" class="toast-root" aria-live="polite"></div>
@@ -26,7 +29,7 @@
       </div>
       <nav class="nav" id="nav"></nav>
       <div class="sidebar-footer">
-        <div class="version" id="app-version">v1.0.0-frontend-r1</div>
+        <div class="version" id="app-version">-</div>
       </div>
     </aside>
 
@@ -62,11 +65,10 @@
     </div>
   </template>
 
-  <script src="./config.js?v=frontend-r7"></script>
-  <script src="./assets/js/core/state.js?v=frontend-r7"></script>
-  <script src="./assets/js/core/api.js?v=frontend-r7"></script>
-  <script src="./assets/js/components/ui.js?v=frontend-r7"></script>
-  <script src="./assets/js/pages/pages.js?v=frontend-r7"></script>
-  <script src="./assets/js/app.js?v=frontend-r7"></script>
+  <script>
+    ['config.js', 'assets/js/core/state.js', 'assets/js/core/api.js', 'assets/js/components/ui.js', 'assets/js/pages/pages.js', 'assets/js/app.js'].forEach(src => {
+      document.write(`<script src="./${src}?v=${encodeURIComponent(window.ANP_VERSION || 'local')}"><\/script>`);
+    });
+  </script>
 </body>
 </html>

@@ -67,6 +67,29 @@ ANP.ui = {
     return `<div class="card metric"><div class="metric-label">${this.esc(label)}</div><div class="metric-value">${this.esc(value)}</div>${desc ? `<div class="metric-desc">${this.esc(desc)}</div>` : ''}</div>`;
   },
 
+  coachButton(page) {
+    if (!ANP.constants.coaching?.[page]) return '';
+    return `<button class="coach-fab" type="button" data-coach="${this.esc(page)}" aria-label="현재 화면 코칭 보기"><span>?</span><strong>힌트</strong></button>`;
+  },
+
+  bindCoach() {
+    document.querySelectorAll('[data-coach]').forEach(btn => {
+      btn.onclick = () => this.openCoach(btn.dataset.coach);
+    });
+  },
+
+  openCoach(page) {
+    const coach = ANP.constants.coaching?.[page];
+    if (!coach) return;
+    const tips = (coach.tips || []).map(tip => `<li>${this.esc(tip)}</li>`).join('');
+    const caution = coach.caution ? `<div class="coach-caution"><strong>주의</strong><p>${this.esc(coach.caution)}</p></div>` : '';
+    this.modal({
+      title: coach.title,
+      body: `<div class="coach-panel"><p class="coach-lead">${this.esc(coach.lead || '')}</p><ol class="coach-tips">${tips}</ol>${caution}</div>`,
+      confirmText: '확인'
+    });
+  },
+
   badge(value) {
     const text = String(value || '-');
     const key = text.toLowerCase().replaceAll(' ', '');
