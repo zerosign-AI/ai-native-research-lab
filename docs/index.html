@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Native Platform</title>
+  <meta name="description" content="AI Native Platform - Research Lab" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css" />
+  <link rel="stylesheet" href="./assets/css/design-system.css?v=frontend-r6" />
+  <link rel="stylesheet" href="./assets/css/layout.css?v=frontend-r6" />
+  <link rel="stylesheet" href="./assets/css/components.css?v=frontend-r6" />
+</head>
+<body>
+  <div id="toast-root" class="toast-root" aria-live="polite"></div>
+  <div id="dialog-root"></div>
+
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">AI</div>
+        <div class="brand-copy">
+          <div class="brand-title" id="brand-title">AI Native Platform</div>
+          <div class="brand-subtitle" id="brand-subtitle">Research Lab</div>
+        </div>
+      </div>
+      <nav class="nav" id="nav"></nav>
+      <div class="sidebar-footer">
+        <div class="version" id="app-version">v1.0.0-frontend-r1</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="page-heading">
+          <div class="eyebrow" id="page-eyebrow">AI Native Platform</div>
+          <h1 id="page-title">대시보드</h1>
+          <p class="page-desc" id="page-desc">현재 연구 진행 상황을 확인합니다.</p>
+        </div>
+        <div class="topbar-actions">
+          <select id="current-topic" class="select topic-select" aria-label="현재 연구과제 선택">
+            <option value="">전체 연구과제</option>
+          </select>
+          <button class="btn btn-secondary" id="btn-open-session">작성 정보</button>
+        </div>
+      </header>
+      <section class="content" id="content"></section>
+    </main>
+  </div>
+
+  <template id="session-template">
+    <div class="form-grid">
+      <label class="field">
+        <span>작성자 <b class="required">*</b></span>
+        <select id="session-user" class="select"></select>
+      </label>
+      <label class="field">
+        <span>팀 암호 <b class="required">*</b></span>
+        <input id="session-key" class="input" type="password" placeholder="팀 암호를 입력하세요." />
+      </label>
+      <p class="help-text">작성자와 팀 암호는 이 브라우저에 저장됩니다. 매번 입력하지 않아도 되며, 필요 시 다시 변경할 수 있습니다.</p>
+    </div>
+  </template>
+
+  <script src="./config.js?v=frontend-r6"></script>
+  <script src="./assets/js/core/state.js?v=frontend-r6"></script>
+  <script src="./assets/js/core/api.js?v=frontend-r6"></script>
+  <script src="./assets/js/components/ui.js?v=frontend-r6"></script>
+  <script src="./assets/js/pages/pages.js?v=frontend-r6"></script>
+  <script src="./assets/js/app.js?v=frontend-r6"></script>
+</body>
+</html>
