@@ -294,8 +294,17 @@
 }
 
 .td-actions {
-  width: 128px;
+  width: 220px;
   white-space: nowrap;
+}
+
+.td-actions .btn {
+  height: 34px;
+  padding: 0 10px;
+}
+
+.td-actions .btn + .btn {
+  margin-left: var(--space-2);
 }
 
 .badge {
@@ -422,6 +431,37 @@
   margin-top: var(--space-5);
 }
 
+.detail-grid {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.detail-field {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--line);
+}
+
+.detail-field:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.detail-label {
+  font-size: 12px;
+  font-weight: 780;
+  color: var(--muted);
+}
+
+.detail-value {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
 .list-card {
   display: grid;
   gap: 6px;
@@ -521,4 +561,14 @@
   .dashboard-hero-grid {
     grid-template-columns: 1fr;
   }
+}
+
+
+.delete-confirm {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.delete-confirm p {
+  margin: 0;
 }

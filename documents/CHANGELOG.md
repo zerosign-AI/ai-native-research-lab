@@ -43,6 +43,42 @@ Validation:
 - Form action names and payload keys matched Apps Script contract.
 - Browser smoke test remains pending because local server approval was unavailable.
 
+## Edit/Delete Permission Extension
+
+Status: implemented locally, not committed
+
+Changes:
+
+- Added frontend detail/edit/delete actions for supported list pages.
+- Added Apps Script update/delete mutation handlers.
+- Enforced server-side mutation permissions: admin for structural data, member for own opinions, viewer read-only.
+- Kept settings read-only in the frontend.
+
+Protected:
+
+- Spreadsheet schema unchanged.
+- API endpoint unchanged.
+- JSON response envelope unchanged.
+- Existing add action names preserved.
+
+## Google Account Authorization Hardening
+
+Status: implemented locally, not committed
+
+Changes:
+
+- Added Apps Script Google login email validation against `02_Members.Email`.
+- Restricted GET data access to registered active Google accounts.
+- Required POST `userId` to match the active Google login email before role checks.
+- Updated frontend writing-info guidance to clarify Google account matching.
+
+Protected:
+
+- Spreadsheet schema unchanged.
+- API endpoint unchanged.
+- JSON response envelope unchanged.
+- Existing request fields preserved.
+
 ## Future Entries
 
 Future changes should use this format:

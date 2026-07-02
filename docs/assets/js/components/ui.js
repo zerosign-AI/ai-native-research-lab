@@ -166,11 +166,13 @@ ANP.ui = {
     const emptyLabel = this.esc(config.emptyLabel || '등록된 항목이 없습니다.');
     if (!rows || !rows.length) return `<div class="empty">${emptyLabel}</div>`;
 
-    const colgroup = columns.map(col => `<col style="width:${col.width || 'auto'}">`).join('') + (actions.length ? '<col style="width:132px">' : '');
+    const colgroup = columns.map(col => `<col style="width:${col.width || 'auto'}">`).join('') + (actions.length ? '<col style="width:220px">' : '');
     const header = columns.map(col => `<th>${this.esc(col.label)}</th>`).join('') + (actions.length ? '<th>관리</th>' : '');
     const body = rows.map(row => {
       const cells = columns.map(col => `<td>${this.cell(row, col)}</td>`).join('');
-      const actionCells = actions.length ? `<td class="td-actions">${actions.map(action => `<button class="btn btn-tertiary" data-action="${this.esc(action.key)}" data-id="${this.esc(row.ID)}">${this.esc(action.label)}</button>`).join('')}</td>` : '';
+      const actionId = row.ID ?? row.Key ?? '';
+      const rowActions = actions.filter(action => !action.show || action.show(row));
+      const actionCells = actions.length ? `<td class="td-actions">${rowActions.map(action => `<button class="btn btn-tertiary" data-action="${this.esc(action.key)}" data-id="${this.esc(actionId)}">${this.esc(action.label)}</button>`).join('')}</td>` : '';
       return `<tr>${cells}${actionCells}</tr>`;
     }).join('');
 
@@ -183,7 +185,7 @@ ANP.ui = {
     if (col.type === 'progress') return this.progress(value);
 
     const safe = this.esc(value || '');
-    const clamp = col.type === 'pre' ? 'clamp-2' : 'clamp-1';
+    const clamp = col.multiline ? 'clamp-2' : 'clamp-1';
     const cellType = col.type === 'title' ? 'cell-title' : col.type === 'pre' ? 'cell-pre' : 'cell-text';
     return `<div class="cell ${cellType} ${clamp}" title="${safe}">${safe}</div>`;
   },

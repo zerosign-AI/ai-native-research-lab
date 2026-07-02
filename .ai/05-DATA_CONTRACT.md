@@ -60,6 +60,17 @@ The frontend may use these collections from `data`:
 
 Frontend code may derive display fields such as member labels, role labels, owner names, author names, or topic titles. Derived fields must not require backend changes.
 
+
+## Authentication And Authorization
+
+Runtime access is controlled by Google Apps Script and `02_Members`.
+
+- Apps Script Web App must be deployed so Google login is required and the active user email is available.
+- `Session.getActiveUser().getEmail()` must match `02_Members.Email` for read access.
+- POST mutations additionally require the existing `writeKey` and `userId` request fields.
+- The submitted `userId` must identify the same active member whose `Email` matches the Google login account.
+- Role authorization uses `02_Members.Role`: `admin` for structural mutations, `member` for own opinions, and `viewer` as read-only.
+
 ## POST Request
 
 The frontend sends mutation requests in this shape:
@@ -75,7 +86,7 @@ The frontend sends mutation requests in this shape:
 
 ## Allowed Actions
 
-The current Apps Script contract allows:
+The current Apps Script contract allows create actions:
 
 - `addOpinion`
 - `addDecision`
@@ -84,7 +95,22 @@ The current Apps Script contract allows:
 - `addTopic`
 - `addMember`
 
-RC7 must not rename or remove these action names.
+The edit/delete extension allows mutation actions:
+
+- `updateOpinion`
+- `deleteOpinion`
+- `updateDecision`
+- `deleteDecision`
+- `updateFramework`
+- `deleteFramework`
+- `updateRoadmap`
+- `deleteRoadmap`
+- `updateTopic`
+- `deleteTopic`
+- `updateMember`
+- `deleteMember`
+
+Existing action names must not be renamed or removed.
 
 ## POST Response
 
@@ -118,4 +144,4 @@ Frontend code must treat Spreadsheet-driven field names as external contract fie
 
 Apps Script source under `appsscript/` may be read for contract analysis.
 
-It must not be modified during RC7 frontend refactoring.
+Apps Script may be modified only when the requested feature requires backend mutation support. Such changes must preserve Spreadsheet sheet names, column names, column order, endpoint location, and JSON envelope format.
