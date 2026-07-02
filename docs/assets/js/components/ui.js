@@ -69,7 +69,7 @@ ANP.ui = {
 
   coachButton(page) {
     if (!ANP.constants.coaching?.[page]) return '';
-    return `<button class="coach-fab" type="button" data-coach="${this.esc(page)}" aria-label="현재 화면 코칭 보기"><span>?</span><strong>힌트</strong></button>`;
+    return `<button class="coach-fab" type="button" data-coach="${this.esc(page)}" aria-label="현재 화면 코칭 보기" title="현재 화면 코칭 보기"><span>?</span></button>`;
   },
 
   bindCoach() {
